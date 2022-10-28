@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SigninPage from "./pages/auth/SigninPage";
+import Err404Page from "./pages/err/Err404Page";
+import HomePage from "./pages/home/HomePage";
 
-function App() {
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+
+        {/* Auth */}
+        <Route path="/signin" element={<SigninPage />} />
+
+
+
+        <Route path="*" element={<Err404Page />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
