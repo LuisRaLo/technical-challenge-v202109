@@ -8,7 +8,6 @@ from Utils.Helpers.StringsHelper import StringsHelper
 authController = Blueprint('authController', __name__)
 authService = AuthService()
 
-
 @authController.route('/signin', methods=['POST'])
 def signIn():
     try:
