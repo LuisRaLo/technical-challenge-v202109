@@ -43,20 +43,20 @@ class AuthService:
 
                     self._update_token(usuario_id=usuario.usuario_id, token=jwt)
                 
-                    personaDTO.Peronsa = usuario.persona_id.persona_id
-                    personaDTO.Telefono = usuario.persona_id.telefono
-                    personaDTO.ApellidoPaterno = usuario.persona_id.apaterno
-                    personaDTO.ApellidoMaterno = usuario.persona_id.amaterno
-                    personaDTO.Nombre = usuario.persona_id.nombre
-                    personaDTO.Genero = usuario.persona_id.genero
+                    personaDTO.persona_id = usuario.persona_id.persona_id
+                    personaDTO.telefono = usuario.persona_id.telefono
+                    personaDTO.apaterno = usuario.persona_id.apaterno
+                    personaDTO.amaterno = usuario.persona_id.amaterno
+                    personaDTO.nombre = usuario.persona_id.nombre
+                    personaDTO.genero = usuario.persona_id.genero
 
-                    usuarioDTO.ID_Usuario = usuario.usuario_id
-                    usuarioDTO.Persona = personaDTO
-                    usuarioDTO.Rol = usuario.rol
-                    usuarioDTO.Email = usuario.email
-                    usuarioDTO.Token = str(jwt)
-                    usuarioDTO.IsActive = usuario.isActive
-                    usuarioDTO.CreatedAt = str(usuario.createdAt)
+                    usuarioDTO.usuario_id = usuario.usuario_id
+                    usuarioDTO.persona = personaDTO
+                    usuarioDTO.rol = usuario.rol
+                    usuarioDTO.email = usuario.email
+                    usuarioDTO.token = str(jwt)
+                    usuarioDTO.isActive = usuario.isActive
+                    usuarioDTO.createdAt = str(usuario.createdAt)
                     
                     return usuarioDTO
 

@@ -3,60 +3,62 @@ import json
 
 class PersonaDTO:
     def __init__(self):
-        self._ID_Peronsa: int
-        self._Telefono: str
-        self._Nombre: str
-        self._APaterno: str
-        self._AMaterno: str
-        self._Genero: str
+        self._persona_id: int
+        self._telefono: str
+        self._nombre: str
+        self._apaterno: str
+        self._amaterno: str
+        self._fecha_nacimiento: str
+        self._genero: str
+        
         
     @property
-    def ID_Persona(self) -> int:
-        return self._ID_Persona
+    def persona_id(self) -> int:
+        return self._persona_id
     
-    @ID_Persona.setter
-    def ID_Persona(self, ID_Persona: int):
-        self._ID_Persona = ID_Persona
+    @persona_id.setter
+    def persona_id(self, persona_id: int):
+        self._persona_id = persona_id
         
     @property
-    def Telefono(self) -> str:
-        return self._Telefono
+    def telefono(self) -> str:
+        return self._telefono
 
-    @Telefono.setter
-    def Telefono(self, Telefono: str):
-        self._Telefono = Telefono
+    @telefono.setter
+    def telefono(self, telefono: str):
+        self._telefono = telefono
         
     @property
-    def Nombre(self) -> str:
-        return self._Nombre
+    def nombre(self) -> str:
+        return self._nombre
 
-    @Nombre.setter
-    def Nombre(self, Nombre: str):
-        self._Nombre = Nombre
-
-    @property
-    def APaterno(self) -> str:
-        return self._APaterno
-
-    @APaterno.setter
-    def APaterno(self, APaterno: str):
-        self._APaterno = APaterno
+    @nombre.setter
+    def nombre(self, nombre: str):
+        self._nombre = nombre
 
     @property
-    def AMaterno(self) -> str:
-        return self._AMaterno
+    def apaterno(self) -> str:
+        return self._apaterno
 
-    @AMaterno.setter
-    def AMaterno(self, AMaterno: str):
-        self._AMaterno = AMaterno
+    @apaterno.setter
+    def apaterno(self, apaterno: str):
+        self._apaterno = apaterno
+
+    @property
+    def amaterno(self) -> str:
+        return self._amaterno
+
+    @amaterno.setter
+    def amaterno(self, amaterno: str):
+        self._amaterno = amaterno
         
     @property
-    def Genero(self) -> str:
-        return self._Genero
+    def genero(self) -> str:
+        return self._genero
 
-    @Genero.setter
-    def Genero(self, Genero: str):
-        self._Genero = Genero
+    @genero.setter
+    def genero(self, genero: str):
+        self._genero = genero
                         
         
     def toJSON(self):
