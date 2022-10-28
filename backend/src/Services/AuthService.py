@@ -7,15 +7,17 @@ from Entities.UsuarioEntity import UsuarioEntity
 from Entities.PersonaEntity import PersonaEntity
 from Utils.DTOs.RegistroDTO import RegistroDTO
 from Utils.DTOs.UsuarioDTO import UsuarioDTO
+from Utils.DTOs.PersonaDTO import PersonaDTO
 from Utils.Helpers.StringsHelper import StringsHelper
 from Utils.Strategies.JWTStrategy import write_jwt
 
 
 class AuthService:
-
-    def __init__(self,
-                 usuarioRepository=UsuarioRepository(mysql=MySQL()),
-                 personaRepository=PersonaRepository(mysql=MySQL())):
+    def __init__(
+        self,
+        usuarioRepository=UsuarioRepository(mysql=MySQL()),
+        personaRepository=PersonaRepository(mysql=MySQL()),
+    ):
         self.usuarioRepository = usuarioRepository
         self.personaRepository = personaRepository
 
@@ -23,30 +25,39 @@ class AuthService:
         try:
 
             usuarioDTO = UsuarioDTO()
-            usuario = self.usuarioRepository.join_persona(
-                email=data.get('email'))
+            personaDTO = PersonaDTO()
+            usuario = self.usuarioRepository.join_persona(email=data.get("email"))
 
-            if (usuario != None):
+            if usuario != None:
 
-                if (StringsHelper.compare(data.get('password'),
-                                          usuario.password)):
+                if StringsHelper.compare(data.get("password"), usuario.password):
                     jwt: str = str(
-                        write_jwt({
-                            'id': usuario.usuario_id,
-                            'email': usuario.email,
-                            'persona_id': usuario.persona_id.persona_id,
-                        }))
+                        write_jwt(
+                            {
+                                "id": usuario.usuario_id,
+                                "email": usuario.email,
+                                "persona_id": usuario.persona_id.persona_id,
+                            }
+                        )
+                    )
 
-                    try_update_jwt = self._update_token(
-                        usuario_id=usuario.usuario_id, token=jwt)
+                    self._update_token(usuario_id=usuario.usuario_id, token=jwt)
+                
+                    personaDTO.Peronsa = usuario.persona_id.persona_id
+                    personaDTO.Telefono = usuario.persona_id.telefono
+                    personaDTO.ApellidoPaterno = usuario.persona_id.apaterno
+                    personaDTO.ApellidoMaterno = usuario.persona_id.amaterno
+                    personaDTO.Nombre = usuario.persona_id.nombre
+                    personaDTO.Genero = usuario.persona_id.genero
 
-                    usuarioDTO.jwt = str(jwt)
-                    usuarioDTO.usuario_id = usuario.usuario_id
-                    usuarioDTO.email = usuario.email
-                    usuarioDTO.rol = usuario.rol
-                    usuarioDTO.nombre = usuario.persona_id.nombre
-                    usuarioDTO.genero = usuario.persona_id.genero
-                    usuarioDTO.fecha_nacimiento = usuario.persona_id.fecha_nacimiento
+                    usuarioDTO.ID_Usuario = usuario.usuario_id
+                    usuarioDTO.Persona = personaDTO
+                    usuarioDTO.Rol = usuario.rol
+                    usuarioDTO.Email = usuario.email
+                    usuarioDTO.Token = str(jwt)
+                    usuarioDTO.IsActive = usuario.isActive
+                    usuarioDTO.CreatedAt = str(usuario.createdAt)
+                    
                     return usuarioDTO
 
             else:
@@ -60,17 +71,15 @@ class AuthService:
 
     def sign_up(self, data: RegistroDTO) -> str | bool:
         try:
-            if (self.usuarioRepository.find_by_email(
-                    email=data.email) == None):
+            if self.usuarioRepository.find_by_email(email=data.email) == None:
                 persona_id = self._insert_persona(data=data)
 
-                if (persona_id > 0):
+                if persona_id > 0:
 
-                    tryInsert = self._insert_usuario(data=data,
-                                                     persona_id=persona_id)
+                    tryInsert = self._insert_usuario(data=data, persona_id=persona_id)
                     if tryInsert == True:
                         return True
-                    return (tryInsert)
+                    return tryInsert
 
                 else:
                     return "Error al insertar persona"
@@ -98,17 +107,16 @@ class AuthService:
         finally:
             personaEntity = None
 
-    def _insert_usuario(self, data: RegistroDTO,
-                        persona_id: int) -> str | bool:
+    def _insert_usuario(self, data: RegistroDTO, persona_id: int) -> str | bool:
         try:
             usuarioEntity = UsuarioEntity()
             usuarioEntity.rol = data.rol
             usuarioEntity.email = data.email
             usuarioEntity.password = data.password
 
-            return self.usuarioRepository.insert(usuarioEntity=usuarioEntity,
-                                                 persona_id=persona_id,
-                                                 is_active=1)
+            return self.usuarioRepository.insert(
+                usuarioEntity=usuarioEntity, persona_id=persona_id, is_active=1
+            )
 
         except Exception as e:
             logging.exception(traceback.format_exc())

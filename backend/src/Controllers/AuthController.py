@@ -15,6 +15,7 @@ def signIn():
         if request_data['email'] != None and request_data['password'] != None:
 
             proccess = authService.sign_in(data=request_data)
+            
             if proccess != None:
                 return jsonify({
                     'folio': StringsHelper.generate_folio(),
