@@ -19,8 +19,7 @@ class UsuarioRepository(Repository):
             cur = self.mysql.connection.cursor()
             cur.execute('''SELECT * FROM usuarios''')
             usuarios = cur.fetchall()
-            usuarios = dict(zip([key[0] for key in cur.description], usuarios))
-
+                      
             if len(usuarios) > 0:
                 return usuarios
             else:

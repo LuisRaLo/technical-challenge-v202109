@@ -4,7 +4,6 @@ import json
 class UsuarioDTO:
     def __init__(self):
         self._usuario_id: str
-        self._usuario: str
         self._email: str
         self._rol: str
         self._telefono: str
@@ -21,14 +20,6 @@ class UsuarioDTO:
     @usuario_id.setter
     def usuario_id(self, usuario_id: str):
         self._usuario_id = usuario_id
-
-    @property
-    def usuario(self) -> str:
-        return self._usuario
-
-    @usuario.setter
-    def usuario(self, usuario: str):
-        self._usuario = usuario
 
     @property
     def email(self) -> str:
