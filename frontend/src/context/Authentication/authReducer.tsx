@@ -1,5 +1,5 @@
 import IBusinessAccount from "../../utils/interfaces/IBusinessAccount";
-import { IUsuario } from "../../utils/interfaces/IUsuario";
+import IUsuario from "../../utils/interfaces/IUsuario";
 
 export interface AuthState {
   status: "checking" | "authenticated" | "not-authenticated";

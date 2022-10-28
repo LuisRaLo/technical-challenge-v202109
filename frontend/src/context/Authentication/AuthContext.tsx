@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useReducer } from "react";
 import { authReducer, AuthState } from "./authReducer";
-import { IUsuario } from "../../utils/interfaces/IUsuario";
+import IUsuario from "../../utils/interfaces/IUsuario";
 import useAsyncStorage from "../../hooks/useAsynStorage";
-import StoryChallengeService from "../../services/storyChallenge.service";
 import AuthException from "../../utils/exceptions/authException";
+import useFetchAuth from "../../hooks/useFetchAuth";
 
 type AuthContextProps = {
   errorMessage: { title?: string; message: string } | undefined;
@@ -30,9 +30,10 @@ export const AuthContext = createContext({} as AuthContextProps);
 
 export const AuthProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(authReducer, authInicialState);
-
-
+  
+  const { signin } = useFetchAuth();
   const { setItem, getItem, removeItem } = useAsyncStorage();
+
 
   useEffect(() => {
     checkFireToken();
@@ -72,6 +73,9 @@ export const AuthProvider = ({ children }: any) => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      const user = await signin(email, password);
+
+      console.log(user);
      
       //return dispatch({ type: "notAuthenticated" });
     } catch (error: any) {

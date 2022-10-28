@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import CopyrightComponent from "../../components/common/CopyrightComponent";
 import BackgroundComponent from "../../components/backgrounds/BackgroundComponent";
-import { IUsuario } from "../../utils/interfaces/IUsuario";
+import IUsuario from "../../utils/interfaces/IUsuario";
 import { AuthContext } from "../../context/Authentication/AuthContext";
 import RoleEnum from "../../utils/enums/RoleEnum";
 
@@ -20,20 +20,17 @@ export default function SignUpPage() {
   const { signUp } = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState<IUsuario>({
-    sucursalId: 0,
-    contrato: "",
-    rol: RoleEnum.CUSTOMER,
-    generalData: {
-      nombre: "",
-      apaterno: "",
-      amaterno: "",
-      email: "",
-    },
-    conditions: {
-      acceptTerms: false,
-      acceptPrivacy: false,
-      acceptNotifications: false,
-    },
+    usuario_id: 0,
+    persona_id: 0,
+    rol: RoleEnum.USER,
+    email: "",
+    password: "",
+    token: null,
+    token_recovery: null,
+    isActive: false,
+    createdAt: new Date(),
+    updateAt: new Date(),
+    deleteAt: new Date(),
   });
   const [contrasenas, setContrasenas] = useState({
     contrasena: "",
@@ -49,30 +46,13 @@ export default function SignUpPage() {
     }
   };
 
-  const handleInputChange = (objeto: string, propiedad: string, valor: any) => {
-    switch (objeto) {
-      case "generalData":
-        setCredentials({
-          ...credentials,
-          generalData: {
-            ...credentials.generalData,
-            [propiedad]: valor,
-          },
-        });
-        break;
-      case "conditions":
-        setCredentials({
-          ...credentials,
-          conditions: {
-            ...credentials.conditions,
-            [propiedad]: valor,
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  };
+  const handleInputChange = (propiedad: string, valor: any) => {
+    setCredentials({
+      ...credentials,
+      [propiedad]: valor,
+    });
+  }
+
 
   return (
     <BackgroundComponent>
@@ -97,7 +77,7 @@ export default function SignUpPage() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <Grid container spacing={2}>
+            {/* <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
                   autoComplete="given-name"
@@ -244,7 +224,7 @@ export default function SignUpPage() {
                 />
               </Grid>
             </Grid>
-
+ */}
             <Button
               type="submit"
               fullWidth

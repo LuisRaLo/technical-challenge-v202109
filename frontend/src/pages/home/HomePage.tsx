@@ -21,7 +21,7 @@ export default function Home() {
             fontWeight="bold"
             paddingLeft={10}
           >
-            Bienvenido {user?.generalData.nombre} a{" "}
+            Bienvenido {user?.email} a{" "}
           </Typography>
         </Grid>
 
