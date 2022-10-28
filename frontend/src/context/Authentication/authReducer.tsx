@@ -1,15 +1,13 @@
-import IBusinessAccount from "../../utils/interfaces/IBusinessAccount";
 import IUsuario from "../../utils/interfaces/IUsuario";
 
 export interface AuthState {
   status: "checking" | "authenticated" | "not-authenticated";
   errorMessage: { title?: string; message: string; actions?: any } | undefined;
   user: IUsuario | null;
-  businessAccount: IBusinessAccount | null;
 }
 
 type AuthAction =
-  | { type: "login"; payload: { user: IUsuario, businessAccount: IBusinessAccount } }
+  | { type: "login"; payload: { user: IUsuario } }
   | { type: "signUp" }
   | {
       type: "addError";
@@ -45,7 +43,6 @@ export const authReducer = (
         errorMessage: undefined,
         status: "authenticated",
         user: action.payload.user,
-        businessAccount: action.payload.businessAccount,
       };
 
     case "signUp":

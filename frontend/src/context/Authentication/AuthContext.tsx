@@ -3,7 +3,7 @@ import { authReducer, AuthState } from "./authReducer";
 import IUsuario from "../../utils/interfaces/IUsuario";
 import useAsyncStorage from "../../hooks/useAsynStorage";
 import AuthException from "../../utils/exceptions/authException";
-import useFetchAuth from "../../hooks/useFetchAuth";
+import useFetchAuth, { ISigninResponse } from "../../hooks/useFetchAuth";
 
 type AuthContextProps = {
   errorMessage: { title?: string; message: string } | undefined;
@@ -23,14 +23,13 @@ const authInicialState: AuthState = {
   status: "checking",
   user: null,
   errorMessage: undefined,
-  businessAccount: null,
 };
 
 export const AuthContext = createContext({} as AuthContextProps);
 
 export const AuthProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(authReducer, authInicialState);
-  
+
   const { signin } = useFetchAuth();
   const { setItem, getItem, removeItem } = useAsyncStorage();
 
@@ -73,11 +72,22 @@ export const AuthProvider = ({ children }: any) => {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const user = await signin(email, password);
+      const userResponse: ISigninResponse = await signin(email, password);
 
-      console.log(user);
-     
-      //return dispatch({ type: "notAuthenticated" });
+      if (userResponse.mensaje === "Operación exitosa") {
+        console.log(userResponse.resultado);
+        //dispatch({ type: "login", payload: { user: userResponse.resultado as IUsuario } });
+      } else {
+        dispatch({
+          type: "addError",
+          payload: {
+            title: userResponse.mensaje,
+            message: userResponse.resultado as string,
+          },
+        });
+
+        return dispatch({ type: "notAuthenticated" });
+      }
     } catch (error: any) {
       const exception = AuthException.getExceptions(error);
       dispatch({
