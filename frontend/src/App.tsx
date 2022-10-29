@@ -5,6 +5,7 @@ import SigninPage from "./pages/auth/SigninPage";
 import SignUpPage from "./pages/auth/SignUpPage";
 import Err404Page from "./pages/err/Err404Page";
 import HomePage from "./pages/home/HomePage";
+import NewsletterPage from "./pages/newsletters/NewsletterPage";
 import InitialSkeletonPage from "./pages/skelletons/InitialSkeletonPage";
 import UsuariosPage from "./pages/usuarios/UsuariosPage";
 
@@ -23,6 +24,9 @@ const App: React.FC = () => {
             <Route path="/home" element={<HomePage />} />
 
             <Route path="/users" element={<UsuariosPage />} />
+
+            <Route path="/newsletter" element={<NewsletterPage />} />
+
           </Fragment>
         ) : (
           <Fragment>
