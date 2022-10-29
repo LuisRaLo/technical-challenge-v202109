@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: any) => {
       const isValidate: any = await isValidateJwt(jwt);
       if (isValidate.message === "Token válido") {
         const user = await getUsuarioByID(isValidate.result.id, jwt);
-        
+
         if (user) {
           return dispatch({
             type: "login",
@@ -81,13 +81,14 @@ export const AuthProvider = ({ children }: any) => {
       console.log(isValid);
 
       if (isValid === true) {
-        
+
         const trySignup = await signup(payload);
-        console.log(trySignup);
-
-        return true;
-
-        //dispatch({ type: "signUp" });
+        if (trySignup.resultado === "Usuario registrado") {
+          dispatch({ type: "signUp" });
+          return true;
+        }
+        dispatch({ type: "addError", payload: { message: trySignup.resultado } });
+        return false;
       }
 
       dispatch({

@@ -7,6 +7,10 @@ export interface ISigninResponse extends IResponse {
     resultado: string | IUsuario
 }
 
+export interface ISignupResponse extends IResponse {
+    resultado: string
+}
+
 function useFetchAuth() {
 
     const url = (process.env.REACT_APP_BE_BASE_URI as string) +
@@ -28,7 +32,7 @@ function useFetchAuth() {
         return data
     }, [])
 
-    const signup = useCallback(async (payload:ISignUpRequest): Promise<any> => {
+    const signup = useCallback(async (payload:ISignUpRequest): Promise<ISignupResponse> => {
         const response = await fetch(url + '/signup', {
             method: 'PUT',
             headers: {
