@@ -13,6 +13,9 @@ class UsuarioEntity:
         self._token: str
         self._token_recovery: str
         self._isActive: bool
+        self._acceptTerms = bool
+        self._acceptPrivacy = bool
+        self._acceptNewsletters = bool
         self._createdAt: datetime
         self._updateAt: datetime
         self._deleteAt: datetime
@@ -80,6 +83,29 @@ class UsuarioEntity:
     @isActive.setter
     def isActive(self, isActive: str):
         self._isActive = isActive
+    @property
+    def acceptTerms(self)->bool:
+        return self._acceptTerms
+
+    @acceptTerms.setter
+    def acceptTerms(self, acceptTerms:bool):
+        self._acceptTerms = acceptTerms
+        
+    @property
+    def acceptPrivacy(self)->bool:
+        return self._acceptPrivacy
+    
+    @acceptPrivacy.setter
+    def acceptPrivacy(self, acceptPrivacy:bool):
+        self._acceptPrivacy = acceptPrivacy
+        
+    @property
+    def acceptNewsletters(self)->bool:
+        return self._acceptNewsletters
+    
+    @acceptNewsletters.setter
+    def acceptNewsletters(self, acceptNewsletters:bool):
+        self._acceptNewsletters = acceptNewsletters
         
     @property
     def createdAt(self) -> str:

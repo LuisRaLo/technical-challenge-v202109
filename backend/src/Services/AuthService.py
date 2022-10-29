@@ -56,6 +56,9 @@ class AuthService:
                     usuarioDTO.email = usuario.email
                     usuarioDTO.token = str(jwt)
                     usuarioDTO.isActive = usuario.isActive
+                    usuarioDTO.acceptTerms = usuario.acceptTerms
+                    usuarioDTO.acceptPrivacy = usuario._acceptPrivacy
+                    usuarioDTO.acceptNewsletters = usuario.acceptNewsletters
                     usuarioDTO.createdAt = str(usuario.createdAt)
                     
                     return usuarioDTO
@@ -94,9 +97,9 @@ class AuthService:
 
             personaEntity.telefono = data.telefono
             personaEntity.nombre = data.nombre
-            personaEntity.apaterno = data.apellidoPaterno
-            personaEntity.amaterno = data.apellidoMaterno
-            personaEntity.fecha_nacimiento = data.fechaNacimiento
+            personaEntity.apaterno = data.apaterno
+            personaEntity.amaterno = data.amaterno
+            personaEntity.fecha_nacimiento = data.fecha_nacimiento
             personaEntity.genero = data.genero
 
             return self.personaRepository.insert(personaEntity=personaEntity)
@@ -113,6 +116,9 @@ class AuthService:
             usuarioEntity.rol = data.rol
             usuarioEntity.email = data.email
             usuarioEntity.password = data.password
+            usuarioEntity.acceptTerms = data.acceptTerms
+            usuarioEntity.acceptPrivacy = data.acceptPrivacy
+            usuarioEntity.acceptNewsletters = data.acceptNewsletters
 
             return self.usuarioRepository.insert(
                 usuarioEntity=usuarioEntity, persona_id=persona_id, is_active=1

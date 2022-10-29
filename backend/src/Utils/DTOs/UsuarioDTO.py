@@ -11,6 +11,9 @@ class UsuarioDTO:
         self._email: str
         self._token: str
         self._isActive: str
+        self._acceptTerms = bool
+        self._acceptPrivacy = bool
+        self._acceptNewsletters = bool
         self._createdAt: datetime
         
     @property
@@ -60,6 +63,30 @@ class UsuarioDTO:
     @isActive.setter
     def isActive(self, isActive: str):
         self._isActive = isActive
+        
+    @property
+    def acceptTerms(self)->bool:
+        return self._acceptTerms
+
+    @acceptTerms.setter
+    def acceptTerms(self, acceptTerms:bool):
+        self._acceptTerms = acceptTerms
+        
+    @property
+    def acceptPrivacy(self)->bool:
+        return self._acceptPrivacy
+    
+    @acceptPrivacy.setter
+    def acceptPrivacy(self, acceptPrivacy:bool):
+        self._acceptPrivacy = acceptPrivacy
+        
+    @property
+    def acceptNewsletters(self)->bool:
+        return self._acceptNewsletters
+    
+    @acceptNewsletters.setter
+    def acceptNewsletters(self, acceptNewsletters:bool):
+        self._acceptNewsletters = acceptNewsletters
         
     @property
     def createdAt(self) -> str:

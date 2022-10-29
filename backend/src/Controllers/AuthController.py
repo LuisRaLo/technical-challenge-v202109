@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 import traceback
 from flask import Blueprint, request, jsonify
 from Utils.DTOs.RegistroDTO import RegistroDTO
@@ -8,6 +9,7 @@ from Utils.Helpers.StringsHelper import StringsHelper
 authController = Blueprint('authController', __name__)
 authService = AuthService()
 
+
 @authController.route('/signin', methods=['POST'])
 def signIn():
     try:
@@ -15,7 +17,7 @@ def signIn():
         if request_data['email'] != None and request_data['password'] != None:
 
             proccess = authService.sign_in(data=request_data)
-            
+
             if proccess != None:
                 return jsonify({
                     'folio': StringsHelper.generate_folio(),
@@ -52,22 +54,29 @@ def signIn():
 
 
 @authController.route('/signup', methods=['PUT'])
-def user():
+def signup():
     try:
         request_data = request.get_json()
-        if request_data['email'] and request_data['password'] and request_data['nombre'] and request_data['apellidoPaterno'] and request_data['apellidoMaterno'] and request_data['telefono'] and request_data['fechaNacimiento'] and request_data['genero']:
+        if request_data['email'] and request_data['password'] and request_data['password_repeat'] and request_data['telefono'] and request_data['nombre'] and request_data['apaterno'] and request_data['amaterno'] and request_data['fecha_nacimiento'] and request_data['genero']:
 
             registroDTO = RegistroDTO()
+
+            registroDTO.rol = request_data['rol']
             registroDTO.email = request_data['email']
             registroDTO.password = request_data['password']
-            registroDTO.rol = request_data['rol']
-            registroDTO.nombre = request_data['nombre']
-            registroDTO.apellidoPaterno = request_data['apellidoPaterno']
-            registroDTO.apellidoMaterno = request_data['apellidoMaterno']
+            registroDTO.password_repeat = request_data['password_repeat']
+            registroDTO.isActive = request_data['isActive']
             registroDTO.telefono = request_data['telefono']
-            registroDTO.fechaNacimiento = request_data['fechaNacimiento']
+            registroDTO.nombre = request_data['nombre']
+            registroDTO.apaterno = request_data['apaterno']
+            registroDTO.amaterno = request_data['amaterno']
+            registroDTO.fecha_nacimiento = request_data['fecha_nacimiento']
             registroDTO.genero = request_data['genero']
+            registroDTO.acceptTerms = request_data['acceptTerms']
+            registroDTO.acceptPrivacy = request_data['acceptPrivacy']
+            registroDTO.acceptNewsletters = request_data['acceptNewsletters']
 
+            print(registroDTO.toJSON())
             proccess = authService.sign_up(data=registroDTO)
 
             if proccess == True:
@@ -94,7 +103,7 @@ def user():
             response.status_code = 400
             return response
     except Exception as e:
-        
+
         logging.exception(traceback.format_exc())
         response = jsonify(
             {

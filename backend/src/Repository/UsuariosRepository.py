@@ -19,7 +19,7 @@ class UsuarioRepository(Repository):
             cur = self.mysql.connection.cursor()
             cur.execute('''SELECT * FROM usuarios''')
             usuarios = cur.fetchall()
-                      
+
             if len(usuarios) > 0:
                 return usuarios
             else:
@@ -70,10 +70,10 @@ class UsuarioRepository(Repository):
             password: str = StringsHelper.crypt(usuarioEntity.password)
             cur = self.mysql.connection.cursor()
             cur.execute(
-                '''INSERT INTO usuarios (persona_id,rol,email, password,isActive)
-                VALUES (%s,%s,%s, %s, %s)''',
+                '''INSERT INTO usuarios (persona_id,rol,email, password,isActive,acceptTerms,acceptPrivacy,acceptNewsletters)
+                VALUES (%s,%s,%s, %s, %s, %s, %s, %s)''',
                 (persona_id, usuarioEntity.rol, usuarioEntity.email, password,
-                 is_active))
+                 is_active, usuarioEntity.acceptTerms, usuarioEntity.acceptPrivacy, usuarioEntity.acceptNewsletters))
             self.mysql.connection.commit()
 
             return True
@@ -112,7 +112,7 @@ class UsuarioRepository(Repository):
                 FROM usuarios AS u
                 LEFT JOIN personas AS p ON u.persona_id = p.persona_id
                 WHERE email = %s OR usuario_id = %s''', (email, usuario_id))
-            
+
             usuario = mysql_cursor.fetchone()
 
             if usuario is not None:
@@ -139,6 +139,9 @@ class UsuarioRepository(Repository):
                 usuarioEntity.token = usuario['token']
                 usuarioEntity.token_recovery = usuario['token_recovery']
                 usuarioEntity.isActive = usuario['isActive']
+                usuarioEntity.acceptTerms = usuario['acceptTerms']
+                usuarioEntity.acceptPrivacy = usuario['acceptPrivacy']
+                usuarioEntity.acceptNewsletters = usuario['acceptNewsletters']
                 usuarioEntity.createdAt = usuario['createdAt']
                 usuarioEntity.updateAt = usuario['updateAt']
                 usuarioEntity.deleteAt = usuario['deleteAt']
