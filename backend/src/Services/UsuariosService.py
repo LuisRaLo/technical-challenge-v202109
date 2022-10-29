@@ -1,17 +1,11 @@
-import json
 import logging
 import traceback
 from typing import List
 from flask_mysqldb import MySQL
 from Repository.UsuariosRepository import UsuarioRepository
-from Repository.PersonaRepository import PersonaRepository
 from Entities.UsuarioEntity import UsuarioEntity
-from Entities.PersonaEntity import PersonaEntity
-from Utils.DTOs.RegistroDTO import RegistroDTO
 from Utils.DTOs.UsuarioDTO import UsuarioDTO
 from Utils.DTOs.PersonaDTO import PersonaDTO
-from Utils.Helpers.StringsHelper import StringsHelper
-from Utils.Strategies.JWTStrategy import write_jwt
 
 
 class UsuariosService:
@@ -27,7 +21,7 @@ class UsuariosService:
             list_users = []
 
             for user in try_users:
-              
+
                 usuarioDTO = UsuarioDTO()
                 personaDTO = PersonaDTO()
 
@@ -48,7 +42,42 @@ class UsuariosService:
                 usuarioDTO.acceptNewsletters = user["acceptNewsletters"]
                 usuarioDTO.createdAt = str(user["createdAt"])
 
-                print(usuarioDTO.toJSON())
+                list_users.append(usuarioDTO.toJSON())
+
+            return list_users
+
+        except Exception as e:
+            logging.ERROR(traceback.format_exc())
+            return e
+
+    def get_usuarios_for_newsletter(self) -> List[UsuarioEntity] | None:
+        try:
+            try_users = self.usuarioRepository.join_personas_for_newsletter()
+
+            list_users = []
+
+            for user in try_users:
+
+                usuarioDTO = UsuarioDTO()
+                personaDTO = PersonaDTO()
+
+                personaDTO.persona_id = user["persona_id"]
+                personaDTO.telefono = user["telefono"]
+                personaDTO.apaterno = user["apaterno"]
+                personaDTO.amaterno = user["amaterno"]
+                personaDTO.nombre = user["nombre"]
+                personaDTO.genero = user["genero"]
+                usuarioDTO.usuario_id = user["usuario_id"]
+                usuarioDTO.persona = personaDTO
+                usuarioDTO.rol = user["rol"]
+                usuarioDTO.email = user["email"]
+                usuarioDTO.token = user["token"]
+                usuarioDTO.isActive = user["isActive"]
+                usuarioDTO.acceptTerms = user["acceptTerms"]
+                usuarioDTO.acceptPrivacy = user["acceptPrivacy"]
+                usuarioDTO.acceptNewsletters = user["acceptNewsletters"]
+                usuarioDTO.createdAt = str(user["createdAt"])
+
                 list_users.append(usuarioDTO.toJSON())
 
             return list_users
