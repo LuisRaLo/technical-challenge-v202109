@@ -76,7 +76,6 @@ def signup():
             registroDTO.acceptPrivacy = request_data['acceptPrivacy']
             registroDTO.acceptNewsletters = request_data['acceptNewsletters']
 
-            print(registroDTO.toJSON())
             proccess = authService.sign_up(data=registroDTO)
 
             if proccess == True:
