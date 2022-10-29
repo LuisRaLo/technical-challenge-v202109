@@ -30,7 +30,7 @@ function useFetchAuth() {
 
     const signup = useCallback(async (payload:ISignUpRequest): Promise<any> => {
         const response = await fetch(url + '/signup', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
