@@ -8,7 +8,7 @@ export default function CopyrightComponent(props: any) {
       align="center"
       {...props}
     >
-      {"Copyright© healthy App "}
+      {"Copyright© Story Challenge App "}
       {new Date().getFullYear()}
       {"."}
     </Typography>

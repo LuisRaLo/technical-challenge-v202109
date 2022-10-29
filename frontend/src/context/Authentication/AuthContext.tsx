@@ -6,19 +6,18 @@ import AuthException from "../../utils/exceptions/authException";
 import useFetchAuth, { ISigninResponse } from "../../hooks/useFetchAuth";
 import useFetchTest from "../../hooks/useFetchTest";
 import useFetchUsuarios from "../../hooks/useFetchUsuarios";
+import ISignUpRequest from "../../utils/interfaces/ISignUp";
 
 type AuthContextProps = {
   errorMessage: { title?: string; message: string } | undefined;
   user: IUsuario | null;
   status: "checking" | "authenticated" | "not-authenticated";
-  signUp: (user: IUsuario, constrasenas: any) => Promise<boolean>;
+  signUp: (payload: ISignUpRequest) => Promise<boolean>;
   signIn: (email: string, password: string) => Promise<boolean>;
   logOut: () => void;
   removeError: () => void;
   recoverPassword: (email: string) => Promise<void>;
   updateUser: (user: IUsuario) => Promise<void>;
-  getJWToken: () => Promise<string>;
-  getUID: () => Promise<string>;
 };
 
 const authInicialState: AuthState = {
@@ -73,8 +72,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const signUp = async (
-    user: IUsuario,
-    constrasenas: any
+    payload: ISignUpRequest,
   ): Promise<boolean> => {
     try {
 
@@ -155,14 +153,6 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
-  const getJWToken = async (): Promise<string> => {
-    return "";
-  };
-
-  const getUID = async (): Promise<string> => {
-    return "";
-  };
-
   const logOut = async (): Promise<void> => {
     try {
       await removeItem();
@@ -187,8 +177,6 @@ export const AuthProvider = ({ children }: any) => {
         recoverPassword,
         removeError,
         updateUser,
-        getJWToken,
-        getUID,
       }}
     >
       {children}

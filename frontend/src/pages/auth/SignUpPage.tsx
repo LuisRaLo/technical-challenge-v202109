@@ -15,32 +15,30 @@ import BackgroundComponent from "../../components/backgrounds/BackgroundComponen
 import IUsuario from "../../utils/interfaces/IUsuario";
 import { AuthContext } from "../../context/Authentication/AuthContext";
 import RoleEnum from "../../utils/enums/RoleEnum";
+import ISignUpRequest from "../../utils/interfaces/ISignUp";
 
 export default function SignUpPage() {
   const { signUp } = useContext(AuthContext);
 
-  const [credentials, setCredentials] = useState<IUsuario>({
-    usuario_id: 0,
-    persona_id: 0,
+  const [credentials, setCredentials] = useState<ISignUpRequest>({
     rol: RoleEnum.USER,
-    email: "",
-    password: "",
-    token: null,
-    token_recovery: null,
-    isActive: false,
-    createdAt: new Date(),
-    updateAt: new Date(),
-    deleteAt: new Date(),
+    email: '',
+    password: '',
+    password_repeat: '',
+    isActive: true,
+    telefono: '',
+    nombre: '',
+    apaterno: '',
+    amaterno: '',
+    fecha_nacimiento: '',
+    genero: '',
   });
-  const [contrasenas, setContrasenas] = useState({
-    contrasena: "",
-    contrasena2: "",
-  });
+
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     try {
       event.preventDefault();
-      signUp(credentials, contrasenas);
+      signUp(credentials);
     } catch (error: any) {
       alert(error.message);
     }
@@ -77,7 +75,7 @@ export default function SignUpPage() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            {/* <Grid container spacing={2}>
+             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
                   autoComplete="given-name"
@@ -85,16 +83,17 @@ export default function SignUpPage() {
                   fullWidth
                   label="Nombre"
                   autoFocus
-                  value={credentials.generalData.nombre}
+                  value={credentials.email}
                   inputProps={{
                     pattern: "[A-Za-z]{1,20}",
                   }}
                   onChange={(e) => {
-                    handleInputChange("generalData", "nombre", e.target.value);
+                    handleInputChange("email", e.target.value);
                   }}
                 />
               </Grid>
-
+              
+            {/*
               <Grid item xs={12} sm={4}>
                 <TextField
                   required
@@ -223,8 +222,11 @@ export default function SignUpPage() {
                   label="Acepto la política de privacidad."
                 />
               </Grid>
+            
+ 
+            */}        
             </Grid>
- */}
+            
             <Button
               type="submit"
               fullWidth
