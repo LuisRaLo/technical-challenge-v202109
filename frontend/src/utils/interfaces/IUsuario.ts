@@ -2,8 +2,8 @@ import RoleEnum from "../enums/RoleEnum";
 import IPersona from "./IPersona";
 
 export default interface IUsuario {
-  usuario_id: number;
-  persona_id: number | IPersona;
+  usuario_id?: number;
+  persona?: IPersona;
   rol: RoleEnum;
   email: string;
   password: string;

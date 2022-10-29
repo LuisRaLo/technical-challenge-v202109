@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/Authentication/AuthContext";
 import { Button, Grid, Typography } from "@mui/material";
 import BackgroundComponent from "../../components/backgrounds/BackgroundComponent";
+import MenuComponent from "../../components/dashboard/menuComponent";
 
 export default function Home() {
   const { logOut, user } = useContext(AuthContext);
@@ -21,7 +22,7 @@ export default function Home() {
             fontWeight="bold"
             paddingLeft={10}
           >
-            Bienvenido {user?.email} a{" "}
+            Bienvenido {user?.persona?.nombre} a{" "}
           </Typography>
         </Grid>
         
@@ -35,11 +36,8 @@ export default function Home() {
         </Grid>
       </Grid>
 
+      <MenuComponent rol={user?.rol as string} />
 
-      
-      <Typography variant="body1" fontWeight="bold">
-          {JSON.stringify(user)}
-        </Typography>
     </BackgroundComponent>
   );
 }

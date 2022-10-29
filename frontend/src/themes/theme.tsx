@@ -25,7 +25,7 @@ const healthyTheme = createTheme({
     },
     text: {
       primary: "#000",
-      secondary: "#fff",
+      secondary: "#757575",
     },
   },
   typography: {
