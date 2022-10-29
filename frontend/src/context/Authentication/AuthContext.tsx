@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: any) => {
       const isValidate: any = await isValidateJwt(jwt);
       if (isValidate.message === "Token válido") {
         const user = await getUsuarioByID(isValidate.result.id, jwt);
-
+        
         if (user) {
           return dispatch({
             type: "login",
