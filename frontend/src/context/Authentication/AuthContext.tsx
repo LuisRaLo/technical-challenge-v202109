@@ -7,6 +7,7 @@ import useFetchAuth, { ISigninResponse } from "../../hooks/useFetchAuth";
 import useFetchTest from "../../hooks/useFetchTest";
 import useFetchUsuarios from "../../hooks/useFetchUsuarios";
 import ISignUpRequest from "../../utils/interfaces/ISignUp";
+import ValidationHelper from "../../utils/helpers/ValidationHelper";
 
 type AuthContextProps = {
   errorMessage: { title?: string; message: string } | undefined;
@@ -32,7 +33,7 @@ export const AuthProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(authReducer, authInicialState);
 
   const { setItem, getItem, removeItem } = useAsyncStorage();
-  const { signin } = useFetchAuth();
+  const { signin, signup } = useFetchAuth();
   const { isValidateJwt } = useFetchTest();
   const { getUsuarioByID } = useFetchUsuarios();
 
@@ -76,9 +77,28 @@ export const AuthProvider = ({ children }: any) => {
   ): Promise<boolean> => {
     try {
 
+      const isValid = ValidationHelper.validateSignUpRequest(payload);
+      console.log(isValid);
 
-      dispatch({ type: "signUp" });
-      return true;
+      if (isValid === true) {
+        
+        const trySignup = await signup(payload);
+        console.log(trySignup);
+
+        return true;
+
+        //dispatch({ type: "signUp" });
+      }
+
+      dispatch({
+        type: "addError",
+        payload: {
+          title: 'Error',
+          message: isValid as string,
+        },
+      });
+
+      return false;
     } catch (error: any) {
       const exception = AuthException.getExceptions(error);
       dispatch({

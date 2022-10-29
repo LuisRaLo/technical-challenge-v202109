@@ -12,4 +12,8 @@ export default interface ISignUpRequest {
   amaterno: string;
   fecha_nacimiento: string;
   genero: string;
+
+  acceptTerms?: boolean;
+  acceptPrivacy?: boolean;
+  acceptNewsletters?: boolean;
 }

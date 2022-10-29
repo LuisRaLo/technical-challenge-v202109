@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { IResponse } from '../utils/interfaces/backend/IResponse';
+import ISignUpRequest from '../utils/interfaces/ISignUp';
 import IUsuario from '../utils/interfaces/IUsuario';
 
 export interface ISigninResponse extends IResponse {
@@ -27,9 +28,23 @@ function useFetchAuth() {
         return data
     }, [])
 
+    const signup = useCallback(async (payload:ISignUpRequest): Promise<any> => {
+        const response = await fetch(url + '/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+
+        })
+        const data = await response.json()
+        return data
+    }, [])
+
 
     return {
-        signin
+        signin,
+        signup
     }
 
 }

@@ -16,6 +16,8 @@ import IUsuario from "../../utils/interfaces/IUsuario";
 import { AuthContext } from "../../context/Authentication/AuthContext";
 import RoleEnum from "../../utils/enums/RoleEnum";
 import ISignUpRequest from "../../utils/interfaces/ISignUp";
+import ValidationHelper from "../../utils/helpers/ValidationHelper";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function SignUpPage() {
   const { signUp } = useContext(AuthContext);
@@ -32,16 +34,16 @@ export default function SignUpPage() {
     amaterno: '',
     fecha_nacimiento: '',
     genero: '',
+
+    acceptTerms: false,
+    acceptPrivacy: false,
+    acceptNewsletters: false,
   });
 
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    try {
       event.preventDefault();
-      signUp(credentials);
-    } catch (error: any) {
-      alert(error.message);
-    }
+      return signUp(credentials);
   };
 
   const handleInputChange = (propiedad: string, valor: any) => {
@@ -75,7 +77,7 @@ export default function SignUpPage() {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-             <Grid container spacing={2}>
+            <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
                   autoComplete="given-name"
@@ -83,25 +85,25 @@ export default function SignUpPage() {
                   fullWidth
                   label="Nombre"
                   autoFocus
-                  value={credentials.email}
+                  value={credentials.nombre}
                   inputProps={{
                     pattern: "[A-Za-z]{1,20}",
                   }}
                   onChange={(e) => {
-                    handleInputChange("email", e.target.value);
+                    handleInputChange("nombre", e.target.value);
                   }}
                 />
               </Grid>
-              
-            {/*
+
+
               <Grid item xs={12} sm={4}>
                 <TextField
                   required
                   fullWidth
                   label="Apellido Paterno"
-                  value={credentials.generalData.apaterno}
+                  value={credentials.apaterno}
                   onChange={(e) =>
-                    handleInputChange("generalData", "apaterno", e.target.value)
+                    handleInputChange("apaterno", e.target.value)
                   }
                 />
               </Grid>
@@ -111,11 +113,54 @@ export default function SignUpPage() {
                   required
                   fullWidth
                   label="Apellido Materno"
-                  value={credentials.generalData.amaterno}
+                  value={credentials.amaterno}
                   onChange={(e) =>
-                    handleInputChange("generalData", "amaterno", e.target.value)
+                    handleInputChange("amaterno", e.target.value)
                   }
                 />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Telefono"
+                  value={credentials.telefono}
+                  onChange={(e) =>
+                    handleInputChange("telefono", e.target.value)
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Fecha de Nacimiento"
+                  value={credentials.fecha_nacimiento}
+                  onChange={(e) =>
+                    handleInputChange("fecha_nacimiento", e.target.value)
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={4}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Genero</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={credentials.genero}
+                    label="Age"
+                    onChange={(e) =>
+                      handleInputChange("genero", e.target.value)
+                    }
+                  >
+                    <MenuItem value={""}></MenuItem>
+                    <MenuItem value={"M"}>Masculino</MenuItem>
+                    <MenuItem value={"F"}>Femenino</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
@@ -124,9 +169,9 @@ export default function SignUpPage() {
                   fullWidth
                   label="Correo Electrónico"
                   autoComplete="email"
-                  value={credentials.generalData.email}
+                  value={credentials.email}
                   onChange={(e) =>
-                    handleInputChange("generalData", "email", e.target.value)
+                    handleInputChange("email", e.target.value)
                   }
                 />
               </Grid>
@@ -137,12 +182,9 @@ export default function SignUpPage() {
                   label="Contraseña"
                   type="password"
                   autoComplete="new-password"
-                  value={contrasenas.contrasena}
+                  value={credentials.password}
                   onChange={(e) =>
-                    setContrasenas({
-                      ...contrasenas,
-                      contrasena: e.target.value,
-                    })
+                    handleInputChange("password", e.target.value)
                   }
                 />
               </Grid>
@@ -154,12 +196,9 @@ export default function SignUpPage() {
                   label="Repetir Contraseña"
                   type="password"
                   autoComplete="new-password"
-                  value={contrasenas.contrasena2}
+                  value={credentials.password_repeat}
                   onChange={(e) =>
-                    setContrasenas({
-                      ...contrasenas,
-                      contrasena2: e.target.value,
-                    })
+                    handleInputChange("password_repeat", e.target.value)
                   }
                 />
               </Grid>
@@ -171,31 +210,7 @@ export default function SignUpPage() {
                       value="true"
                       color="primary"
                       onChange={(e) =>
-                        handleInputChange(
-                          "conditions",
-                          "acceptTerms",
-                          e.target.checked
-                        )
-                      }
-                    />
-                  }
-                  label="Deseo recibir correos electrónicos de promociones y ofertas."
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      value="true"
-                      color="primary"
-                      required
-                      onChange={(e) =>
-                        handleInputChange(
-                          "conditions",
-                          "acceptPrivacy",
-                          e.target.checked
-                        )
+                        handleInputChange("acceptTerms", e.target.checked)
                       }
                     />
                   }
@@ -211,22 +226,32 @@ export default function SignUpPage() {
                       color="primary"
                       required
                       onChange={(e) =>
-                        handleInputChange(
-                          "conditions",
-                          "acceptNotifications",
-                          e.target.checked
-                        )
+                        handleInputChange("acceptPrivacy", e.target.checked)
                       }
                     />
                   }
                   label="Acepto la política de privacidad."
                 />
               </Grid>
-            
- 
-            */}        
+
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      value="true"
+                      color="primary"
+                      required
+                      onChange={(e) =>
+                        handleInputChange("acceptNewsletters", e.target.checked)
+                      }
+                    />
+                  }
+                  label="Deseo recibir correos electrónicos de promociones y ofertas."
+                />
+              </Grid>
+
             </Grid>
-            
+
             <Button
               type="submit"
               fullWidth
