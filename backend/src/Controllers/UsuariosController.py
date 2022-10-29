@@ -1,20 +1,20 @@
 import logging
 import traceback
 import json
+from dotenv import dotenv_values
 from Services.UsuariosService import UsuariosService
 from Utils.Strategies.JWTStrategy import validate_jwt
 from Utils.Helpers.ValidateHelper import ValidateHelper
 from flask import Blueprint, request, jsonify
-from Utils.DTOs.RegistroDTO import RegistroDTO
-from Services.AuthService import AuthService
 from Utils.Helpers.StringsHelper import StringsHelper
 
 usuariosController = Blueprint("usuariosController", __name__)
 usuariosService = UsuariosService()
 
 
-@usuariosController.route("/", methods=["GET"])
-def get_usuarios():
+@usuariosController.route(rule="/", methods=["GET"])
+def get_all():
+    print("get_usuarios")
     try:
         token = request.headers.get("Authorization")
 
@@ -28,7 +28,7 @@ def get_usuarios():
                         {
                             "folio": StringsHelper.generate_folio(),
                             "mensaje": "Operación exitosa",
-                            "resultado": json.loads(proccess),
+                            "resultado": proccess,
                         }
                     ),
                     200,
@@ -45,7 +45,6 @@ def get_usuarios():
                     400,
                 )
 
-            return response
         else:
             return validate_jwt(token=token, output=True)
     except Exception as e:

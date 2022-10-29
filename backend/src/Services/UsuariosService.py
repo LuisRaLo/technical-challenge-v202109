@@ -20,43 +20,52 @@ class UsuariosService:
                  usuarioRepository=UsuarioRepository(mysql=MySQL())):
         self.usuarioRepository = usuarioRepository
 
-    def get_usuarios(self) ->  List[UsuarioEntity] | None:
+    def get_usuarios(self) -> List[UsuarioEntity] | None:
         try:
-            try_users = self.usuarioRepository.find_all()
+            try_users = self.usuarioRepository.join_personas()
 
-            if try_users != None:
-                
-                users_list = []
-                
-                for user in try_users:
-                    usuarioDTO = UsuarioDTO()
-                    
-                    usuarioDTO.usuario_id = user[0]
-                    usuarioDTO.rol = user[2]
-                    usuarioDTO.email = user[3]
-                    
-                    users_list.append(usuarioDTO)
+            list_users = []
 
-           
-                tojson = json.dumps(users_list, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-                return tojson
-            else:
-                return None
+            for user in try_users:
+              
+                usuarioDTO = UsuarioDTO()
+                personaDTO = PersonaDTO()
+
+                personaDTO.persona_id = user["persona_id"]
+                personaDTO.telefono = user["telefono"]
+                personaDTO.apaterno = user["apaterno"]
+                personaDTO.amaterno = user["amaterno"]
+                personaDTO.nombre = user["nombre"]
+                personaDTO.genero = user["genero"]
+                usuarioDTO.usuario_id = user["usuario_id"]
+                usuarioDTO.persona = personaDTO
+                usuarioDTO.rol = user["rol"]
+                usuarioDTO.email = user["email"]
+                usuarioDTO.token = user["token"]
+                usuarioDTO.isActive = user["isActive"]
+                usuarioDTO.acceptTerms = user["acceptTerms"]
+                usuarioDTO.acceptPrivacy = user["acceptPrivacy"]
+                usuarioDTO.acceptNewsletters = user["acceptNewsletters"]
+                usuarioDTO.createdAt = str(user["createdAt"])
+
+                print(usuarioDTO.toJSON())
+                list_users.append(usuarioDTO.toJSON())
+
+            return list_users
+
         except Exception as e:
             logging.ERROR(traceback.format_exc())
             return e
 
-        finally:
-            usuarioDTO = None
-
     def get_usuario(self, usuario_id: int) -> UsuarioEntity | None:
         try:
-            usuarioDTO = UsuarioDTO()
-            personaDTO = PersonaDTO()
-            
-            usuario = self.usuarioRepository.join_persona(usuario_id=usuario_id)
+
+            usuario = self.usuarioRepository.join_persona(
+                usuario_id=usuario_id)
 
             if usuario_id != None:
+                usuarioDTO = UsuarioDTO()
+                personaDTO = PersonaDTO()
 
                 personaDTO.persona_id = usuario.persona_id.persona_id
                 personaDTO.telefono = usuario.persona_id.telefono
@@ -75,13 +84,12 @@ class UsuariosService:
                 usuarioDTO.acceptPrivacy = usuario.acceptPrivacy
                 usuarioDTO.acceptNewsletters = usuario.acceptNewsletters
                 usuarioDTO.createdAt = str(usuario.createdAt)
-                
+
                 return usuarioDTO
 
             else:
                 return None
-            
- 
+
         except Exception as e:
             logging.ERROR(traceback.format_exc())
             return e

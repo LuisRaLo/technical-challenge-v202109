@@ -1,12 +1,7 @@
 import logging
-from re import T
 import traceback
-import json
-from Services.UsuariosService import UsuariosService
 from Utils.Strategies.JWTStrategy import validate_jwt
 from flask import Blueprint, request, jsonify
-from Utils.DTOs.RegistroDTO import RegistroDTO
-from Services.AuthService import AuthService
 from Utils.Helpers.StringsHelper import StringsHelper
 
 testController = Blueprint("testController", __name__)

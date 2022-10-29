@@ -155,6 +155,61 @@ class UsuarioRepository(Repository):
         finally:
             mysql_cursor.close()
 
+    def join_personas(self) -> List[UsuarioEntity] | None:
+        try:
+            mysql_cursor = self.mysql.connection.cursor()
+            mysql_cursor.execute(
+                '''SELECT * 
+                FROM usuarios AS u
+                LEFT JOIN personas AS p ON u.persona_id = p.persona_id''')
+
+            usuarios = mysql_cursor.fetchall()
+            usuarios = [
+                dict(zip([key[0] for key in mysql_cursor.description], row)) for row in usuarios]
+
+            if usuarios is not None:
+
+                usuarios_arr = []
+
+                for usuario in usuarios:
+
+                    personaEntity = PersonaEntity()
+                    usuarioEntity = UsuarioEntity()
+
+                    personaEntity.persona_id = usuario['persona_id']
+                    personaEntity.telefono = usuario['telefono']
+                    personaEntity.nombre = usuario['nombre']
+                    personaEntity.apaterno = usuario['apaterno']
+                    personaEntity.amaterno = usuario['amaterno']
+                    personaEntity.fecha_nacimiento = usuario['fecha_nacimiento']
+                    personaEntity.genero = usuario['genero']
+
+                    usuarioEntity.usuario_id = usuario['usuario_id']
+                    usuarioEntity.persona_id = personaEntity
+                    usuarioEntity.rol = usuario['rol']
+                    usuarioEntity.email = usuario['email']
+                    usuarioEntity.password = usuario['password']
+                    usuarioEntity.token = usuario['token']
+                    usuarioEntity.token_recovery = usuario['token_recovery']
+                    usuarioEntity.isActive = usuario['isActive']
+                    usuarioEntity.acceptTerms = usuario['acceptTerms']
+                    usuarioEntity.acceptPrivacy = usuario['acceptPrivacy']
+                    usuarioEntity.acceptNewsletters = usuario['acceptNewsletters']
+                    usuarioEntity.createdAt = usuario['createdAt']
+                    usuarioEntity.updateAt = usuario['updateAt']
+                    usuarioEntity.deleteAt = usuario['deleteAt']
+
+                    usuarios_arr.append(usuarioEntity)
+
+                return usuarios
+            else:
+                return None
+        except Exception as e:
+            logging(traceback.format_exc())
+            return None
+        finally:
+            mysql_cursor.close()
+
     def to_JSON(self):
         json_str = json.dumps(self,
                               default=lambda o: o.__dict__,

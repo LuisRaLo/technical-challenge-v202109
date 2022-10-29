@@ -1,6 +1,3 @@
-import json
-
-
 class PersonaDTO:
     def __init__(self):
         self._persona_id: int
@@ -10,16 +7,15 @@ class PersonaDTO:
         self._amaterno: str
         self._fecha_nacimiento: str
         self._genero: str
-        
-        
+
     @property
     def persona_id(self) -> int:
         return self._persona_id
-    
+
     @persona_id.setter
     def persona_id(self, persona_id: int):
         self._persona_id = persona_id
-        
+
     @property
     def telefono(self) -> str:
         return self._telefono
@@ -27,7 +23,7 @@ class PersonaDTO:
     @telefono.setter
     def telefono(self, telefono: str):
         self._telefono = telefono
-        
+
     @property
     def nombre(self) -> str:
         return self._nombre
@@ -51,7 +47,7 @@ class PersonaDTO:
     @amaterno.setter
     def amaterno(self, amaterno: str):
         self._amaterno = amaterno
-        
+
     @property
     def genero(self) -> str:
         return self._genero
@@ -59,10 +55,14 @@ class PersonaDTO:
     @genero.setter
     def genero(self, genero: str):
         self._genero = genero
-                        
-        
+
     def toJSON(self):
-        json_str = json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-        json_str = json_str.replace("_", "")
-        return json.loads(json_str)
+        to_json = {
+            "persona_id": self.persona_id,
+            "telefono": self.telefono,
+            "nombre": self.nombre,
+            "apaterno": self.apaterno,
+            "amaterno": self.amaterno,
+            "genero": self.genero
+        }
+        return to_json
