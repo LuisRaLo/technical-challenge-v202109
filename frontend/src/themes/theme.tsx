@@ -4,9 +4,10 @@ const healthyTheme = createTheme({
   palette: {
     primary: {
       main: "#0071F0",
+      light: "#EDF3FF",
     },
     secondary: {
-      main: "#ff6d00",
+      main: "#2962ff",
     },
     error: {
       main: "#d50000",
