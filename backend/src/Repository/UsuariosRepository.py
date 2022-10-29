@@ -104,14 +104,15 @@ class UsuarioRepository(Repository):
     def delete(self):
         pass
 
-    def join_persona(self, email: str) -> UsuarioEntity | None:
+    def join_persona(self, email: str = None, usuario_id: int = None) -> UsuarioEntity | None:
         try:
             mysql_cursor = self.mysql.connection.cursor()
             mysql_cursor.execute(
                 '''SELECT * 
                 FROM usuarios AS u
                 LEFT JOIN personas AS p ON u.persona_id = p.persona_id
-                WHERE email = %s''', (email, ))
+                WHERE email = %s OR usuario_id = %s''', (email, usuario_id))
+            
             usuario = mysql_cursor.fetchone()
 
             if usuario is not None:
