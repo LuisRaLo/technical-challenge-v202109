@@ -71,6 +71,9 @@ class UsuariosService:
                 usuarioDTO.email = usuario.email
                 usuarioDTO.token = usuario.token
                 usuarioDTO.isActive = usuario.isActive
+                usuarioDTO.acceptTerms = usuario.acceptTerms
+                usuarioDTO.acceptPrivacy = usuario.acceptPrivacy
+                usuarioDTO.acceptNewsletters = usuario.acceptNewsletters
                 usuarioDTO.createdAt = str(usuario.createdAt)
                 
                 return usuarioDTO
