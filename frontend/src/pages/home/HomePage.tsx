@@ -24,6 +24,7 @@ export default function Home() {
             Bienvenido {user?.email} a{" "}
           </Typography>
         </Grid>
+        
 
         <Grid item xs={2} textAlign="right" paddingRight={10}>
           <Button variant="text" onClick={() => logOut()} color={"inherit"}>
@@ -33,6 +34,12 @@ export default function Home() {
           </Button>
         </Grid>
       </Grid>
+
+
+      
+      <Typography variant="body1" fontWeight="bold">
+          {JSON.stringify(user)}
+        </Typography>
     </BackgroundComponent>
   );
 }

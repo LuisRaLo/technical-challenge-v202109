@@ -1,6 +1,10 @@
 import { useCallback } from 'react'
+import { IResponse } from '../utils/interfaces/backend/IResponse';
 import IUsuario from '../utils/interfaces/IUsuario';
 
+export interface IUsuariosResponse extends IResponse {
+    resultado: string | IUsuario
+}
 
 function useFetchUsuarios() {
 
@@ -9,8 +13,11 @@ function useFetchUsuarios() {
 
     const getUsuarios = useCallback(async (): Promise<IUsuario[]> => {
         const response = await fetch(url)
-        const data = await response.json()
-        return data
+        const data: IUsuariosResponse = await response.json()
+        if (Array.isArray(data.resultado)) {
+            return data.resultado as IUsuario[]
+        }
+        return []
     }, [])
 
     const getUsuarioByID = useCallback(async (id: number, jwt: string): Promise<IUsuario | null> => {
@@ -24,8 +31,8 @@ function useFetchUsuarios() {
                     'Authorization': 'Bearer ' + jwt
                 }
             })
-        const data = await response.json()
-        return data
+        const data: IUsuariosResponse = await response.json()
+        return data.resultado as IUsuario
     }, [])
 
 
