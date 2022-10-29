@@ -12,12 +12,8 @@ import MenusEnum from "../../utils/enums/MenusEnum";
 
 import Lottie from "lottie-react";
 import bannersLottie from "../../assets/media/lotties/9386-banner-app-animation.json";
-import importDataLottie from "../../assets/media/lotties/54778-files-imported.json";
-import notificationsCardLottie from "../../assets/media/lotties/93038-notifications.json";
-import POSCardLottie from "../../assets/media/lotties/116785-pos-phone-letim.json";
 import HRCardLottie from "../../assets/media/lotties/41291-human-resources-approval-animation.json";
 import SettingsCardLottie from "../../assets/media/lotties/110200-mobile-setting.json";
-import ManageBusinessCardLottie from "../../assets/media/lotties/99797-data-management.json";
 
 type MenuComponentProps = {
   rol: string;
@@ -30,11 +26,6 @@ function MenuComponent(props: MenuComponentProps): JSX.Element {
     assignPermissions();
   }, [props.rol]);
 
-  //TODO: Verificar Permisos por Rol y acomodarlos en un orden más lógico
-  /*TODO: Asignar el rola desde la base de datos para que sea más dinamico aunque 
-    mejor que se analice para evitar escribir en la base de datos si existiera 
-    alguna actualizacion de menus vs rol
-  */
   const assignPermissions = () => {
     switch (props.rol) {
 
@@ -93,14 +84,14 @@ function MenuComponent(props: MenuComponentProps): JSX.Element {
           return (
             <Grid item xs={4} key={index}>
               <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea href="/admin/banners">
+                <CardActionArea href="/newsletter">
                   <Lottie animationData={bannersLottie} loop={true} />
                   <CardContent style={{ height: "120px" }}>
                     <Typography gutterBottom variant="h6" component="div">
-                      Promotion
+                      Newsletter
                     </Typography>
                     <Typography variant="body2" color="text.primary">
-                      Manage your promotion, create, edit, and delete them.
+                      Manage your newsletter´s; create, edit, and delete them.
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -112,15 +103,14 @@ function MenuComponent(props: MenuComponentProps): JSX.Element {
           return (
             <Grid item xs={4} key={index}>
               <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea href="/admin/users">
+                <CardActionArea href="/users">
                   <Lottie animationData={HRCardLottie} />
                   <CardContent style={{ height: "120px" }}>
                     <Typography gutterBottom variant="h6" component="div">
-                      Human Resources
+                      Users
                     </Typography>
                     <Typography variant="body2" color="text.primary">
-                      Manage your employees, their permissions, catalogues and
-                      more.
+                      Manage your users, their permissions, and their roles.
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -132,7 +122,7 @@ function MenuComponent(props: MenuComponentProps): JSX.Element {
           return (
             <Grid item xs={4} key={index}>
               <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea href="/admin/users">
+                <CardActionArea href="/resports">
                   <Lottie animationData={HRCardLottie} />
                   <CardContent style={{ height: "120px" }}>
                     <Typography gutterBottom variant="h6" component="div">
