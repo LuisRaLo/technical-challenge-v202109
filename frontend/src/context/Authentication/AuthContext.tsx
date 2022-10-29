@@ -1,16 +1,18 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { authReducer, AuthState } from "./authReducer";
 import IUsuario from "../../utils/interfaces/IUsuario";
 import useAsyncStorage from "../../hooks/useAsynStorage";
 import AuthException from "../../utils/exceptions/authException";
 import useFetchAuth, { ISigninResponse } from "../../hooks/useFetchAuth";
+import useFetchTest from "../../hooks/useFetchTest";
+import useFetchUsuarios from "../../hooks/useFetchUsuarios";
 
 type AuthContextProps = {
   errorMessage: { title?: string; message: string } | undefined;
   user: IUsuario | null;
   status: "checking" | "authenticated" | "not-authenticated";
   signUp: (user: IUsuario, constrasenas: any) => Promise<boolean>;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<boolean>;
   logOut: () => void;
   removeError: () => void;
   recoverPassword: (email: string) => Promise<void>;
@@ -30,19 +32,41 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(authReducer, authInicialState);
 
-  const { signin } = useFetchAuth();
   const { setItem, getItem, removeItem } = useAsyncStorage();
-
+  const { signin } = useFetchAuth();
+  const { isValidateJwt } = useFetchTest();
+  const { getUsuarioByID } = useFetchUsuarios();
 
   useEffect(() => {
-    checkFireToken();
+    checkToken();
   }, []);
 
-  const checkFireToken = async () => {
+  const checkToken = async () => {
     const objJWT = await getItem();
 
+    if (objJWT !== null) {
+
+      const { jwt } = objJWT;
+      const isValidate: any = await isValidateJwt(jwt);
+      if (isValidate.message === "Token válido") {
+        const user = await getUsuarioByID(isValidate.result.id, jwt);
+
+        if (user) {
+          return dispatch({
+            type: "login",
+            payload: { user },
+          });
+        }
+
+        return dispatch({
+          type: "notAuthenticated",
+        });
+      }
+
+    };
+    await removeItem();
     return dispatch({ type: "notAuthenticated" });
-  };
+  }
 
   const removeError = () => {
     dispatch({ type: "removeError" });
@@ -74,9 +98,13 @@ export const AuthProvider = ({ children }: any) => {
     try {
       const userResponse: ISigninResponse = await signin(email, password);
 
-      if (userResponse.mensaje === "Operación exitosa") {
-        console.log(userResponse.resultado);
-        //dispatch({ type: "login", payload: { user: userResponse.resultado as IUsuario } });
+      if (userResponse.resultado instanceof Object) {
+        dispatch({ type: "login", payload: { user: userResponse.resultado as IUsuario } });
+
+        setItem({ jwt: userResponse.resultado.token as string });
+
+        return true;
+
       } else {
         dispatch({
           type: "addError",
@@ -86,7 +114,8 @@ export const AuthProvider = ({ children }: any) => {
           },
         });
 
-        return dispatch({ type: "notAuthenticated" });
+        dispatch({ type: "notAuthenticated" });
+        return false;
       }
     } catch (error: any) {
       const exception = AuthException.getExceptions(error);
@@ -97,12 +126,11 @@ export const AuthProvider = ({ children }: any) => {
           message: exception.data.resultado,
         },
       });
+      return false;
     }
   };
 
   const setError = (error: any, title?: string, actions?: any) => {
-    console.log(error);
-
     if (title || actions) {
       const objErr = {
         title: title ? error.title : "Alerta",
@@ -145,15 +173,7 @@ export const AuthProvider = ({ children }: any) => {
     }
   };
 
-  const updateUser = async (userDTO: IUsuario): Promise<void> => {
-    /* try {
-      await FirestoreService.updateUserDoc(await getUID(), userDTO);
-
-      return dispatch({ type: "updateUser", payload: { user: userDTO } });
-    } catch (error) {
-      return setError(error);
-    } */
-  };
+  const updateUser = async (userDTO: IUsuario): Promise<void> => { }
 
   const recoverPassword = async (email: string): Promise<void> => { };
 

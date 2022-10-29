@@ -1,32 +1,36 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import IUsuario from '../utils/interfaces/IUsuario';
 
 
 function useFetchUsuarios() {
-    const [usuarios, setUsuarios] = useState<IUsuario[]>([])
-    const [usuario, setUsuario] = useState<IUsuario>()
 
     const url = (process.env.REACT_APP_BE_BASE_URI as string) +
-        (process.env.REACT_APP_BE_BASE_PATH as string);
+        (process.env.REACT_APP_BE_BASE_PATH as string) + '/usuarios'
 
-    const getUsuarios = useCallback(async () => {
-        const response = await fetch(url + '/usuarios')
+    const getUsuarios = useCallback(async (): Promise<IUsuario[]> => {
+        const response = await fetch(url)
         const data = await response.json()
-        setUsuarios(data)
+        return data
     }, [])
 
-    const getUsuarioByID = useCallback(async (id: number) => {
-        const response = await fetch(url + '/' + id)
+    const getUsuarioByID = useCallback(async (id: number, jwt: string): Promise<IUsuario | null> => {
+        if (!id) return null;
+
+        const response = await fetch(url + '/' + id,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + jwt
+                }
+            })
         const data = await response.json()
-        setUsuarios(data)
+        return data
     }, [])
 
-    useEffect(() => {
-        getUsuarios()
-    }, [getUsuarios])
 
     return {
-        usuarios,
+        getUsuarios,
         getUsuarioByID
     }
 
