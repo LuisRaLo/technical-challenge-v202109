@@ -113,3 +113,4 @@ pip install PyJWT
 pip install bcrypt
 pip install Werkzeug
 pip install Flask-Mail
+pip install Flask-APScheduler
