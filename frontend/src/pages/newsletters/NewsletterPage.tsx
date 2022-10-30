@@ -21,7 +21,6 @@ export default function NewsletterPage() {
 
       <BackgroundComponent breadCrumb={[{ name: 'Newsletter', link: '/newsletter' }]} whitHeader>
         <Container>
-
           <Button variant="contained" onClick={handleOpen}>Crear Newsletter</Button>
         </Container>
       </BackgroundComponent>

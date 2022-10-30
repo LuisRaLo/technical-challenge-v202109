@@ -16,6 +16,8 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import FormContentNewsletterComponent from './FormContentNewsletterComponent';
 import FormProgramingNewsletterComponent from './FormProgramingNewsletterComponent';
+import useFetchNewsletter from '../../hooks/useFetchNewsletter';
+import { NewNewsletterState } from '../../context/features/newsletter/NewNewsleterSlice';
 
 type Props = {
   open: boolean;
@@ -40,6 +42,7 @@ const steps = [
 function FormNewNewsletterComponent({ open, handleClose }: Props) {
 
   const newNewsletterState = useSelector((state: RootState) => state.newNewsletter)
+  const {sendNewsletter} = useFetchNewsletter();
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -56,10 +59,11 @@ function FormNewNewsletterComponent({ open, handleClose }: Props) {
     setActiveStep(0);
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     //handleClose();
-
     console.log(newNewsletterState);
+    const trySendForm = await sendNewsletter(newNewsletterState as NewNewsletterState);
+    console.log(trySendForm);
   }
 
   return (
