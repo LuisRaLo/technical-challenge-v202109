@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import UsersNewsletterComponent from './UsersNewsletterComponent';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../context/store';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -18,6 +18,7 @@ import FormContentNewsletterComponent from './FormContentNewsletterComponent';
 import FormProgramingNewsletterComponent from './FormProgramingNewsletterComponent';
 import useFetchNewsletter from '../../hooks/useFetchNewsletter';
 import { NewNewsletterState } from '../../context/features/newsletter/NewNewsleterSlice';
+import { resetNewNewsletter } from '../../context/features/newsletter/NewNewsleterSlice';
 
 type Props = {
   open: boolean;
@@ -42,7 +43,8 @@ const steps = [
 function FormNewNewsletterComponent({ open, handleClose }: Props) {
 
   const newNewsletterState = useSelector((state: RootState) => state.newNewsletter)
-  const {sendNewsletter} = useFetchNewsletter();
+  const dispatch = useDispatch();
+  const { sendNewsletter } = useFetchNewsletter();
 
   const [activeStep, setActiveStep] = useState(0);
 
@@ -57,13 +59,20 @@ function FormNewNewsletterComponent({ open, handleClose }: Props) {
 
   const handleReset = () => {
     setActiveStep(0);
+    dispatch(resetNewNewsletter());
   };
 
   const handleFinish = async () => {
     //handleClose();
     console.log(newNewsletterState);
     const trySendForm = await sendNewsletter(newNewsletterState as NewNewsletterState);
-    console.log(trySendForm);
+    if (trySendForm.resultado) {
+      handleClose();
+      dispatch(resetNewNewsletter());
+      return
+    }
+
+    alert(trySendForm.resultado);
   }
 
   return (
