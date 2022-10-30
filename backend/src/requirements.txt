@@ -1,5 +1,5 @@
-Flask     
-Flask-MySQLdb
+flask  
+flask_mysqldb
 flask-cors
 python-dotenv
 PyJWT 
