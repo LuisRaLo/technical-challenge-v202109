@@ -7,6 +7,7 @@ from Controllers.UsuariosController import usuariosController
 from Controllers.NewsletterController import newsletterController
 from Controllers.TestController import testController
 from flask_cors import CORS
+from flask_mail import Mail
 
 app = Flask(__name__,
             static_folder='assets',
@@ -37,4 +38,6 @@ if __name__ == "__main__":
     app.register_error_handler(404, lambda e: ({"message": "Not found"}, 404))
     app.config.from_object(config[dotenv_values()["ENV"]])
     cors = CORS(app, resource={r"/*": {"origins": "*"}})
+    mail = Mail(app)
+    
     app.run()

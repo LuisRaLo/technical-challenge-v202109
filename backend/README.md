@@ -112,3 +112,4 @@ pip install python-dotenv
 pip install PyJWT 
 pip install bcrypt
 pip install Werkzeug
+pip install Flask-Mail
