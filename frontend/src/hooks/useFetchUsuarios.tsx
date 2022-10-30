@@ -31,6 +31,21 @@ function useFetchUsuarios() {
         return []
     }, [])
 
+    const getUsuariosNewsletter = useCallback(async (): Promise<IUsuario[]> => {
+
+        const response = await fetch(url + '/newsletter', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + jwt
+            }
+        })
+        const data: IUsuariosResponse = await response.json()
+        if (Array.isArray(data.resultado)) {
+            return data.resultado as IUsuario[]
+        }
+        return []
+    }, [])
+
     const getUsuarioByID = useCallback(async (id: number, jwt: string): Promise<IUsuario | null> => {
         if (!id) return null;
 
@@ -49,6 +64,7 @@ function useFetchUsuarios() {
 
     return {
         getUsuarios,
+        getUsuariosNewsletter,
         getUsuarioByID
     }
 

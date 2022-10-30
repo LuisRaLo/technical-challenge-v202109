@@ -8,10 +8,11 @@ import HomePage from "./pages/home/HomePage";
 import NewsletterPage from "./pages/newsletters/NewsletterPage";
 import InitialSkeletonPage from "./pages/skelletons/InitialSkeletonPage";
 import UsuariosPage from "./pages/usuarios/UsuariosPage";
+import RoleEnum from "./utils/enums/RoleEnum";
 
 
 const App: React.FC = () => {
-  const { status } = useContext(AuthContext);
+  const { status, user } = useContext(AuthContext);
 
   if (status === "checking") return <InitialSkeletonPage />;
 
@@ -19,22 +20,28 @@ const App: React.FC = () => {
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         {status === "authenticated" ? (
-          <Fragment>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/home" element={<HomePage />} />
+          (user?.rol === RoleEnum.ADMINISTRATOR ? (
+            <Fragment>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/usuarios" element={<UsuariosPage />} />
+              <Route path="/newsletter" element={<NewsletterPage />} />
+        
+              <Route path="/home" element={<HomePage />} />
 
-            <Route path="/users" element={<UsuariosPage />} />
-
-            <Route path="/newsletter" element={<NewsletterPage />} />
-
-          </Fragment>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/home" element={<HomePage />} />
+            </Fragment>
+          ))
         ) : (
           <Fragment>
             <Route path="/" element={<SigninPage />} />
             <Route path="/signup" element={<SignUpPage />} />
           </Fragment>
         )}
-       
+
 
         <Route path="*" element={<Err404Page />} />
       </Routes>

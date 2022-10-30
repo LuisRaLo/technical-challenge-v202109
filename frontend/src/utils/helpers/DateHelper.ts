@@ -57,16 +57,17 @@ export default class DateHelpers {
     return new Date(year, month, day);
   }
 
-  public static getCurrentDateString(): string {
+  public static getCurrentDateString(separator: string = '-'): string {
     const date: Date = new Date();
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return `${date.getFullYear()}${separator}${date.getMonth() + 1
+      }${separator}${date.getDate()}`;
+
   }
 
   public static getCurrentDateWithFormat(separator?: string): string {
     const date: Date = new Date();
-    if (separator)
-      return `${date.getFullYear()} ${separator} ${date.getMonth()} ${separator} ${date.getDate()}`;
-    else return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
+    return `${date.getFullYear()}${separator || '-'}${date.getMonth() + 1
+      }${separator || '-'}${date.getDate()}`;
   }
 
   public static getNextDateWithFormat(
@@ -76,18 +77,16 @@ export default class DateHelpers {
     const date: Date = new Date();
     date.setDate(date.getDate() + dayPlus);
     if (separator)
-      return `${date.getFullYear()} ${separator} ${
-        date.getMonth() + 1
-      } ${separator} ${date.getDate()}`;
+      return `${date.getFullYear()} ${separator} ${date.getMonth() + 1
+        } ${separator} ${date.getDate()}`;
     else
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
   }
 
   public static getCurrenTimeStampString(): string {
     const date: Date = new Date();
-    return `${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    return `${date.getFullYear()}-${date.getMonth() + 1
+      }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
   }
 
   public static getCurrentDateStringLarge(): string {
@@ -136,6 +135,11 @@ export default class DateHelpers {
     const month: number = parseInt(dateParts[1], 10) - 1;
     const day: number = parseInt(dateParts[2], 10);
     return new Date(year, month, day);
+  }
+
+  public static currentTime(): string {
+    const date = new Date();
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}:${date.getMilliseconds()}`;
   }
 
   public static isValidRangeDate(
