@@ -1,0 +1,9 @@
+Flask     
+Flask-MySQLdb
+flask-cors
+python-dotenv
+PyJWT 
+bcrypt
+Werkzeug
+Flask-Mail
+Flask-APScheduler

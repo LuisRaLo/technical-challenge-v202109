@@ -22,6 +22,7 @@ Backend hecho en Python con Flask.
     * Tener instalado un [virtualenv](https://docs.python.org/3/tutorial/venv.html)
         ```console
         $ pip install virtualenv
+        $ python -m pip install -r requirments.txt 
         ```
         **Nota**: ir a la documentación de [virtualenv](https://virtualenv.pypa.io/en/latest/installation.html) ya que puede variar la instalación dependiendo su OS
 
@@ -37,7 +38,7 @@ Backend hecho en Python con Flask.
     * iniciar el entorno virtual
         * Para Windows es necesario hacerlos desde el powershell:
             ```console
-            $ ./venv/Scripts/activate  
+            $ ./venv/Scripts/activate 
             ```
 
             Si se muestra algun error en consola diciendo que "la ejecución de scripts está        
@@ -100,17 +101,3 @@ Backend hecho en Python con Flask.
 3. GET /api/v1/usuarios/{usuario_id} : Consulta de usuario. **Necesita JWT**.
 
 4. GET /api/v1/usuarios/{usuario_id}/gustos: información a detalle del usuario que se pase como parámetro en “usuario_id”. **Necesita JWT**.
-
-
-
-
-
-librerias instaladas
-pip install flask     
-pip install flask-mysql
-pip install python-dotenv
-pip install PyJWT 
-pip install bcrypt
-pip install Werkzeug
-pip install Flask-Mail
-pip install Flask-APScheduler
