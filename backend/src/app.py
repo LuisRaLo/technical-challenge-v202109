@@ -8,13 +8,11 @@ from Controllers.NewsletterController import newsletterController
 from Controllers.TestController import testController
 from flask_cors import CORS
 from flask_mail import Mail
+from Factory.Scheduler import scheduler
 
 app = Flask(__name__,
             static_folder='assets',
             static_url_path='/assets')
-
-CORS(app)
-conexion = MySQL(app)
 
 """ROUTES"""
 app.register_blueprint(
@@ -32,6 +30,10 @@ app.register_blueprint(
 )
 
 
+CORS(app)
+conexion = MySQL(app)
+scheduler.init_app(app)
+
 if __name__ == "__main__":
     load_dotenv()
 
@@ -39,5 +41,6 @@ if __name__ == "__main__":
     app.config.from_object(config[dotenv_values()["ENV"]])
     cors = CORS(app, resource={r"/*": {"origins": "*"}})
     mail = Mail(app)
-    
+    scheduler.start()
+
     app.run()

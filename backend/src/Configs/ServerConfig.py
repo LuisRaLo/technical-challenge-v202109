@@ -17,7 +17,9 @@ class DevelopmentConfig():
     MAIL_PASSWORD = dotenv_values()['MAIL_PASSWORD']
     MAIL_DEFAULT_SENDER = dotenv_values()['MAIL_DEFAULT_SENDER']
 
-
+    SCHEDULER_API_ENABLED= dotenv_values()['SCHEDULER_API_ENABLED']
+    
+    
 config = {
     'development': DevelopmentConfig,
     'default': DevelopmentConfig
