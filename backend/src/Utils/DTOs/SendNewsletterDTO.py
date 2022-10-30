@@ -1,4 +1,5 @@
 
+import array
 from typing import List
 
 from flask import jsonify
@@ -12,7 +13,7 @@ class SendNewsletterDTO:
     def __init__(self):
         self._contenido: SendNewsletterContenidoDTO
         self._programing: SendNewsletterProgramingDTO
-        self._users: tuple
+        self._users: array
 
     @property
     def contenido(self) -> SendNewsletterContenidoDTO:
@@ -31,11 +32,11 @@ class SendNewsletterDTO:
         self._programing = programing
 
     @property
-    def users(self) -> tuple:
+    def users(self) -> array:
         return self._users
 
     @users.setter
-    def users(self, users: tuple):
+    def users(self, users: array):
         self._users = users
 
     def toJSON(self):

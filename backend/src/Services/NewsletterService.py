@@ -1,7 +1,10 @@
+from array import array
+from cgi import FieldStorage
 import email
 from importlib.resources import path
 import json
 import logging
+import os
 import traceback
 from typing import List
 from flask import current_app
@@ -17,6 +20,12 @@ from Utils.DTOs.SendNewsletterProgramingDTO import SendNewsletterProgramingDTO
 from Utils.Helpers.StringsHelper import StringsHelper
 from Utils.Strategies.JWTStrategy import write_jwt
 from flask_mail import Message, Mail
+from os.path import join, dirname, realpath
+from werkzeug.utils import secure_filename
+
+
+root_path = dirname(dirname(realpath(__file__)))
+UPLOADS_PATH = join(root_path, "assets", "uploads")
 
 
 class NewsletterService:
@@ -26,57 +35,60 @@ class NewsletterService:
                  personaRepository=PersonaRepository(mysql=MySQL())):
         self._usuarioRepository = usuarioRepository
         self._personaRepository = personaRepository
+        self._mail = Mail()
 
-    def send_newsletter(self, payload, path_file_save_complete: str, path_file_save: str):
+    def send_newsletter(self, sendNewsletterDTO: SendNewsletterDTO, file=None):
         try:
-            """ payload_to_json = json.loads(payload)
+            print(sendNewsletterDTO.users)
 
-            sendNewsletterDTO = SendNewsletterDTO()
-
-            sendNewsletterDTO.contenido = self.__contenido_to_DTO(
-                payload_to_json['contenido'])
-            sendNewsletterDTO.programing = self.__programing_to_DTO(
-                payload_to_json['programing'])
-            sendNewsletterDTO.users = self.__users_to_DTO(
-                payload_to_json['users'])
-
-            print(sendNewsletterDTO.toJSON()) """
-            receivers = ['luian.ramirez.12@gmail.com',
-                         'lunymasterflow@hotmail.com']
+            try_save_file = self.__save_file(file)
             
-            with current_app.app_context():
-                mail = Mail()
-                for receiver in receivers:
-                    msg = Message(
-                        sender=current_app.config['MAIL_USERNAME'],
-                        subject='subject test',
-                        recipients=[receiver],
-                        html='<h1>Hi~~</h1>')
-                    try_send_emails = mail.send(msg)
+            print(try_save_file)
 
-                    print(try_send_emails)
+            # with current_app.app_context():
+            msg = Message(
+                sender=current_app.config['MAIL_USERNAME'],
+                subject=sendNewsletterDTO.contenido.asunto,
+                recipients=sendNewsletterDTO.users,
+                html=sendNewsletterDTO.contenido.contenido,
+            )
+            
+            if try_save_file is not True:
+                msg.attach(
+                    filename=try_save_file['name'], 
+                    content_type=try_save_file['content_type'], 
+                    data=open(try_save_file['path_file_save_complete'], 'rb').read()
+                )
+
+            try_send_emails = self._mail.send(msg)
+
+            print(try_send_emails.__str__())
 
             return True
         except Exception as e:
             logging.exception(traceback.format_exc())
             return False
 
-    def __contenido_to_DTO(self, contenido) -> SendNewsletterContenidoDTO:
-        sendNewsletterContenidoDTO = SendNewsletterContenidoDTO()
-        sendNewsletterContenidoDTO.titulo = contenido['titulo']
-        sendNewsletterContenidoDTO.asunto = contenido['asunto']
-        sendNewsletterContenidoDTO.contenido = contenido['contenido']
-        return sendNewsletterContenidoDTO
+    def __save_file(self, file) -> bool | dict:
+        try:
+            if file is not None:
+                filename = secure_filename(file.filename)
+                path = join(UPLOADS_PATH, filename)
+                if not os.path.exists(UPLOADS_PATH):
+                    os.makedirs(UPLOADS_PATH)
 
-    def __programing_to_DTO(self, programing) -> SendNewsletterProgramingDTO:
-        sendNewsletterProgramingDTO = SendNewsletterProgramingDTO()
-        sendNewsletterProgramingDTO.fecha = programing['fecha']
-        sendNewsletterProgramingDTO.hora = programing['hora']
-        sendNewsletterProgramingDTO.sendNow = programing['sendNow']
-        return sendNewsletterProgramingDTO
+                if os.path.exists(path):
+                    os.remove(path)
 
-    def __users_to_DTO(self, users) -> tuple:
-        emails = tuple()
-        for user in users:
-            emails += (user['email'],)
-        return emails
+                file.save(os.path.join(path))
+
+                return {
+                    "path_file_save_complete": path,
+                    "path_file_save": "/assets/uploads/" + filename,
+                    "content_type": file.content_type,
+                    "filename": filename
+                }
+
+        except Exception as e:
+            logging.exception(traceback.format_exc())
+            return False
