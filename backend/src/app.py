@@ -8,7 +8,10 @@ from Controllers.NewsletterController import newsletterController
 from Controllers.TestController import testController
 from flask_cors import CORS
 
-app = Flask(__name__)
+app = Flask(__name__,
+            static_folder='assets',
+            static_url_path='/assets')
+
 CORS(app)
 conexion = MySQL(app)
 
@@ -20,7 +23,8 @@ app.register_blueprint(
     usuariosController, url_prefix=dotenv_values()["URL_PREFIX"] + "/usuarios"
 )
 app.register_blueprint(
-    newsletterController, url_prefix=dotenv_values()["URL_PREFIX"] + "/newsletter"
+    newsletterController, url_prefix=dotenv_values()[
+        "URL_PREFIX"] + "/newsletter"
 )
 app.register_blueprint(
     testController, url_prefix=dotenv_values()["URL_PREFIX"] + "/test"
